@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday! 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #FFD700;
+    --magic-blue: #1a78c2;
+    --disney-red: #E8002D;
+    --disney-purple: #7B2FBE;
+    --pink: #FF6EB4;
+    --sky: #87CEEB;
+    --star: #FFF176;
+  }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a1628 0%, #1a3a6b 40%, #2d1b69 70%, #0a1628 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-family: 'Nunito', sans-serif;
+    position: relative;
+    cursor: default;
+  }
+
+  /* Stars background */
+  .stars-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .star-dot {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: twinkle var(--d, 2s) ease-in-out infinite alternate;
+  }
+  @keyframes twinkle {
+    from { opacity: 0.2; transform: scale(1); }
+    to   { opacity: 1;   transform: scale(1.4); }
+  }
+
+  /* Castle silhouette */
+  .castle {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 700px;
+    opacity: 0.12;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ===== GIFT SCREEN ===== */
+  #gift-screen {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .magic-text {
+    font-family: 'Pacifico', cursive;
+    font-size: 1.3rem;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(255,215,0,0.8), 0 0 40px rgba(255,215,0,0.4);
+    animation: glow 2s ease-in-out infinite alternate;
+    letter-spacing: 1px;
+  }
+  @keyframes glow {
+    from { text-shadow: 0 0 10px rgba(255,215,0,0.6); }
+    to   { text-shadow: 0 0 30px rgba(255,215,0,1), 0 0 60px rgba(255,165,0,0.6); }
+  }
+
+  .gift-wrapper {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    filter: drop-shadow(0 0 30px rgba(255,215,0,0.5));
+    transition: transform 0.1s;
+  }
+  .gift-wrapper:active { transform: scale(0.93); }
+
+  .gift-svg {
+    width: 180px;
+    height: 180px;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-12px); }
+  }
+
+  .gift-wrapper.shake {
+    animation: shake 0.4s ease-in-out;
+  }
+  @keyframes shake {
+    0%,100% { transform: rotate(0deg) scale(1); }
+    20%     { transform: rotate(-8deg) scale(1.05); }
+    40%     { transform: rotate(8deg)  scale(1.05); }
+    60%     { transform: rotate(-5deg) scale(1.05); }
+    80%     { transform: rotate(5deg)  scale(1.05); }
+  }
+
+  /* Click progress ring */
+  .progress-ring-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .progress-ring-circle {
+    transition: stroke-dashoffset 0.2s ease;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+  }
+
+  .click-hint {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.75);
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 0.6; transform: scale(1); }
+    50%     { opacity: 1;   transform: scale(1.06); }
+  }
+
+  .click-counter {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.8rem;
+    color: var(--gold);
+    text-shadow: 0 0 15px rgba(255,215,0,0.8);
+    min-height: 2rem;
+  }
+
+  /* Floating stars on click */
+  .pop-star {
+    position: fixed;
+    font-size: 1.4rem;
+    pointer-events: none;
+    z-index: 999;
+    animation: popFloat 1s ease-out forwards;
+  }
+  @keyframes popFloat {
+    0%   { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-80px) scale(0.5); }
+  }
+
+  /* ===== CELEBRATION SCREEN ===== */
+  #celebration-screen {
+    display: none;
+    position: relative;
+    z-index: 10;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+    padding: 20px;
+    animation: fadeInUp 0.8s ease-out;
+  }
+  #celebration-screen.active { display: flex; }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .disney-logo-star {
+    font-size: 3rem;
+    animation: spinStar 4s linear infinite;
+  }
+  @keyframes spinStar {
+    from { transform: rotate(0deg) scale(1); }
+    50%  { transform: rotate(180deg) scale(1.2); }
+    to   { transform: rotate(360deg) scale(1); }
+  }
+
+  .hbd-title {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    background: linear-gradient(135deg, #FFD700, #FF6EB4, #87CEEB, #FFD700);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite;
+    line-height: 1.2;
+    filter: drop-shadow(0 4px 20px rgba(255,215,0,0.5));
+  }
+  @keyframes gradientShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .name-display {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2.5rem, 10vw, 5rem);
+    color: white;
+    text-shadow:
+      0 0 20px rgba(255,215,0,0.9),
+      0 0 40px rgba(255,165,0,0.6),
+      3px 3px 0 var(--disney-purple);
+    animation: namePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    opacity: 0;
+    animation-delay: 0.4s;
+    letter-spacing: 2px;
+  }
+  @keyframes namePop {
+    from { opacity: 0; transform: scale(0.3) rotate(-5deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  .wish-message {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(0.9rem, 3vw, 1.2rem);
+    color: rgba(255,255,255,0.9);
+    max-width: 400px;
+    line-height: 1.7;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 20px;
+    padding: 16px 24px;
+    backdrop-filter: blur(10px);
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+  }
+
+  /* Disney characters floating around */
+  .character {
+    position: fixed;
+    font-size: 2.2rem;
+    pointer-events: none;
+    z-index: 5;
+    animation: floatChar var(--dur, 6s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+  }
+  @keyframes floatChar {
+    0%,100% { transform: translateY(0) rotate(var(--rot-start, -5deg)); }
+    50%      { transform: translateY(var(--up, -20px)) rotate(var(--rot-end, 5deg)); }
+  }
+
+  /* Firework/confetti canvas */
+  #confetti-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+  }
+
+  /* Magic wand sparkles around name */
+  .sparkle-ring {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sparkle {
+    position: absolute;
+    font-size: 1.2rem;
+    animation: orbitSpark var(--od, 4s) linear infinite;
+    animation-delay: var(--odelay, 0s);
+  }
+  @keyframes orbitSpark {
+    from { transform: rotate(0deg) translateX(var(--r, 80px)) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(var(--r, 80px)) rotate(-360deg); }
+  }
+
+  /* Restart btn */
+  .restart-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    padding: 10px 28px;
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+    color: #1a1a2e;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(255,165,0,0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: fadeInUp 0.8s ease-out 1s both;
+    margin-top: 4px;
+  }
+  .restart-btn:hover { transform: scale(1.05); box-shadow: 0 6px 30px rgba(255,165,0,0.7); }
+
+  /* Magical burst overlay on open */
+  #burst {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  #burst.flash { opacity: 1; animation: burstFlash 0.6s ease-out forwards; }
+  @keyframes burstFlash {
+    0%   { opacity: 1; transform: scale(0.5); }
+    50%  { opacity: 0.8; transform: scale(1.5); }
+    100% { opacity: 0; transform: scale(2); }
+  }
+
+  /* Name input */
+  .name-input-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: fadeInUp 0.8s ease-out 0.8s both;
+    opacity: 0;
+  }
+  .name-input-wrap label {
+    font-family: 'Fredoka One', cursive;
+    color: rgba(255,215,0,0.85);
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+  }
+  .name-input {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    padding: 10px 24px;
+    border-radius: 50px;
+    border: 2px solid rgba(255,215,0,0.5);
+    background: rgba(255,255,255,0.1);
+    color: white;
+    text-align: center;
+    width: 240px;
+    outline: none;
+    backdrop-filter: blur(10px);
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .name-input::placeholder { color: rgba(255,255,255,0.4); }
+  .name-input:focus { border-color: var(--gold); box-shadow: 0 0 20px rgba(255,215,0,0.4); }
+
+  /* Mute button */
+  #mute-btn {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 200;
+    background: rgba(255,255,255,0.12);
+    border: 1.5px solid rgba(255,215,0,0.4);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    transition: background 0.2s, transform 0.15s;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  #mute-btn:hover { background: rgba(255,215,0,0.2); transform: scale(1.1); }
+
+  /* ===== WALKING CHARACTERS LANE ===== */
+  #walking-lane {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 110px;
+    pointer-events: none;
+    z-index: 20;
+    overflow: hidden;
+    display: none; /* shown only on celebration */
+  }
+  #walking-lane.active { display: block; }
+
+  /* Grassy ground strip */
+  #walking-lane::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 28px;
+    background: linear-gradient(180deg, #1a5c1a 0%, #0d3b0d 100%);
+    border-top: 3px solid #2ecc40;
+    box-shadow: 0 -2px 12px rgba(46,204,64,0.3);
+  }
+
+  .walker {
+    position: absolute;
+    bottom: 26px;
+    width: 70px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    /* Each walker has its own walk animation via JS */
+  }
+
+  /* Name tag below each character */
+  .walker-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.85);
+    background: rgba(0,0,0,0.4);
+    border-radius: 20px;
+    padding: 1px 6px;
+    white-space: nowrap;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+
+  /* The character SVG/emoji container */
+  .walker-body {
+    font-size: 2.6rem;
+    line-height: 1;
+    animation: walkBob 0.5s ease-in-out infinite alternate;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+  }
+  @keyframes walkBob {
+    from { transform: translateY(0) rotate(-3deg); }
+    to   { transform: translateY(-6px) rotate(3deg); }
+  }
+
+  /* Shadow under each walker */
+  .walker-shadow {
+    width: 36px;
+    height: 8px;
+    background: rgba(0,0,0,0.35);
+    border-radius: 50%;
+    margin-top: -2px;
+    animation: shadowPulse 0.5s ease-in-out infinite alternate;
+  }
+  @keyframes shadowPulse {
+    from { transform: scaleX(1); opacity: 0.5; }
+    to   { transform: scaleX(0.75); opacity: 0.3; }
+  }
+
+  /* ===== PASSWORD SCREEN ===== */
+  #password-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    background: linear-gradient(135deg, #0a1628 0%, #1a3a6b 40%, #2d1b69 70%, #0a1628 100%);
+  }
+  #password-screen.hide-out {
+    animation: screenFadeOut 0.8s ease-in-out forwards;
+  }
+  @keyframes screenFadeOut {
+    0%   { opacity: 1; transform: scale(1); }
+    60%  { opacity: 0.2; transform: scale(1.06); }
+    100% { opacity: 0; transform: scale(1.12); pointer-events: none; }
+  }
+
+  .pw-castle-icon {
+    font-size: 3.5rem;
+    animation: castleGlow 2.5s ease-in-out infinite alternate;
+    margin-bottom: 6px;
+    filter: drop-shadow(0 0 18px rgba(255,215,0,0.6));
+  }
+  @keyframes castleGlow {
+    from { filter: drop-shadow(0 0 10px rgba(255,215,0,0.4)); transform: scale(1); }
+    to   { filter: drop-shadow(0 0 30px rgba(255,215,0,0.9)); transform: scale(1.08); }
+  }
+
+  .pw-title {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(255,215,0,0.7), 0 0 40px rgba(255,165,0,0.4);
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+
+  .pw-subtitle {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 28px;
+    letter-spacing: 0.5px;
+  }
+
+  /* The card */
+  .pw-card {
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(255,215,0,0.25);
+    border-radius: 24px;
+    padding: 32px 36px 28px;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4), inset 0 0 30px rgba(255,215,0,0.04);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: min(340px, 88vw);
+    animation: cardPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  @keyframes cardPop {
+    from { opacity: 0; transform: translateY(30px) scale(0.92); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .pw-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+    color: rgba(255,215,0,0.75);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    align-self: flex-start;
+  }
+
+  /* Dot indicators */
+  .pw-dots {
+    display: flex;
+    gap: 12px;
+    margin: 4px 0 2px;
+  }
+  .pw-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,215,0,0.45);
+    background: transparent;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  }
+  .pw-dot.filled {
+    background: var(--gold);
+    border-color: var(--gold);
+    transform: scale(1.15);
+    box-shadow: 0 0 8px rgba(255,215,0,0.7);
+  }
+  .pw-dot.wrong {
+    background: #E8002D;
+    border-color: #E8002D;
+    animation: dotShake 0.4s ease;
+  }
+  @keyframes dotShake {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-5px); }
+    40%     { transform: translateX(5px); }
+    60%     { transform: translateX(-4px); }
+    80%     { transform: translateX(4px); }
+  }
+
+  /* Numpad grid */
+  .pw-numpad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+  }
+  .pw-key {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.3rem;
+    color: white;
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(255,215,0,0.18);
+    border-radius: 14px;
+    padding: 14px 0;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pw-key:hover { background: rgba(255,215,0,0.15); border-color: rgba(255,215,0,0.4); }
+  .pw-key:active { transform: scale(0.92); background: rgba(255,215,0,0.25); }
+  .pw-key.key-del {
+    font-size: 1rem;
+    color: rgba(255,150,150,0.85);
+    border-color: rgba(255,100,100,0.2);
+  }
+  .pw-key.key-del:hover { background: rgba(255,100,100,0.15); border-color: rgba(255,100,100,0.35); }
+  .pw-key.key-ok {
+    grid-column: span 2;
+    background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,140,0,0.2));
+    border-color: rgba(255,215,0,0.45);
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+  .pw-key.key-ok:hover { background: linear-gradient(135deg, rgba(255,215,0,0.35), rgba(255,140,0,0.35)); }
+
+  /* Error message */
+  .pw-error {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.8rem;
+    color: #ff6b6b;
+    text-align: center;
+    min-height: 1.1rem;
+    letter-spacing: 0.3px;
+    transition: opacity 0.3s;
+  }
+
+  /* Floating stars around password card */
+  .pw-star {
+    position: fixed;
+    font-size: 1rem;
+    pointer-events: none;
+    animation: pwStarFloat var(--d,6s) ease-in-out infinite;
+    animation-delay: var(--dl,0s);
+    opacity: 0.5;
+  }
+  @keyframes pwStarFloat {
+    0%,100% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
+    50%      { transform: translateY(-18px) rotate(20deg); opacity: 0.8; }
+  }
+
+  /* Walk across screen animation — JS assigns per walker */
+  @keyframes walkRight {
+    from { left: -100px; }
+    to   { left: calc(100vw + 100px); }
+  }
+  @keyframes walkLeft {
+    from { left: calc(100vw + 100px); }
+    to   { left: -100px; }
+  }
+
+  /* ===== PHOTO FRAMES ===== */
+  .photo-frame-wrap {
+    position: fixed;
+    z-index: 15;
+    pointer-events: all;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .photo-frame-wrap.show { opacity: 1; }
+
+  .photo-frame-wrap.corner-tl {
+    top: 52px; left: 14px;
+    animation: frameFloat1 6s ease-in-out infinite;
+  }
+  .photo-frame-wrap.corner-tr {
+    top: 36px; right: 18px;
+    animation: frameFloat2 7.2s ease-in-out infinite;
+  }
+  .photo-frame-wrap.corner-bl {
+    bottom: 118px; left: 10px;
+    animation: frameFloat3 6.5s ease-in-out infinite;
+  }
+  .photo-frame-wrap.corner-br {
+    bottom: 128px; right: 14px;
+    animation: frameFloat4 5.8s ease-in-out infinite;
+  }
+
+  @keyframes frameFloat1 {
+    0%,100% { transform: rotate(-7deg) translateY(0px); }
+    50%      { transform: rotate(-4.5deg) translateY(-8px); }
+  }
+  @keyframes frameFloat2 {
+    0%,100% { transform: rotate(6.5deg) translateY(0px); }
+    50%      { transform: rotate(9deg) translateY(-10px); }
+  }
+  @keyframes frameFloat3 {
+    0%,100% { transform: rotate(5.5deg) translateY(0px); }
+    50%      { transform: rotate(3deg) translateY(-7px); }
+  }
+  @keyframes frameFloat4 {
+    0%,100% { transform: rotate(-8.5deg) translateY(0px); }
+    50%      { transform: rotate(-5.5deg) translateY(-9px); }
+  }
+
+  .photo-frame {
+    position: relative;
+    width: 110px;
+    height: 125px;
+    cursor: pointer;
+    filter: drop-shadow(0 8px 18px rgba(0,0,0,0.55));
+    transition: filter 0.25s, transform 0.25s;
+  }
+  .photo-frame:hover {
+    filter: drop-shadow(0 14px 28px rgba(255,215,0,0.75));
+    transform: scale(1.08);
+  }
+
+  .frame-border {
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background: linear-gradient(135deg,#FFD700 0%,#FFA500 25%,#FFD700 50%,#FF8C00 75%,#FFD700 100%);
+    padding: 5px;
+    box-shadow: inset 0 0 8px rgba(255,255,255,0.35), 0 0 0 1.5px rgba(255,200,0,0.5), 0 0 14px rgba(255,165,0,0.25);
+  }
+
+  .frame-mat {
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    background: #fff8f0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .frame-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 4px;
+  }
+
+  .frame-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a3a6b, #2d1b69);
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .frame-placeholder .ph-icon { font-size: 1.7rem; }
+  .frame-placeholder .ph-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.54rem;
+    color: rgba(255,215,0,0.85);
+    text-align: center;
+    line-height: 1.4;
+    padding: 0 5px;
+  }
+
+  .frame-input { display: none; }
+
+  .frame-ornament {
+    position: absolute;
+    font-size: 0.72rem;
+    pointer-events: none;
+    line-height: 1;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+  }
+  .frame-ornament.tl { top:-4px; left:-4px; }
+  .frame-ornament.tr { top:-4px; right:-4px; }
+  .frame-ornament.bl { bottom:-4px; left:-4px; }
+  .frame-ornament.br { bottom:-4px; right:-4px; }
+
+  .frame-caption {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.6rem;
+    color: rgba(255,215,0,0.9);
+    text-align: center;
+    margin-top: 5px;
+    text-shadow: 0 1px 5px rgba(0,0,0,0.7);
+    letter-spacing: 0.4px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Stars background -->
+<div class="stars-bg" id="stars-bg"></div>
+
+<!-- Castle -->
+<svg class="castle" viewBox="0 0 700 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="290" y="50" width="120" height="250" fill="white"/>
+  <rect x="250" y="100" width="60" height="200" fill="white"/>
+  <rect x="390" y="100" width="60" height="200" fill="white"/>
+  <polygon points="350,0 290,50 410,50" fill="white"/>
+  <polygon points="280,60 250,100 310,100" fill="white"/>
+  <polygon points="420,60 390,100 450,100" fill="white"/>
+  <rect x="150" y="140" width="50" height="160" fill="white"/>
+  <rect x="500" y="140" width="50" height="160" fill="white"/>
+  <polygon points="175,100 150,140 200,140" fill="white"/>
+  <polygon points="525,100 500,140 550,140" fill="white"/>
+  <rect x="320" y="170" width="60" height="80" rx="30" fill="#1a3a6b"/>
+  <rect x="270" y="150" width="20" height="20" fill="#1a3a6b"/>
+  <rect x="410" y="150" width="20" height="20" fill="#1a3a6b"/>
+  <rect x="0" y="290" width="700" height="20" fill="white"/>
+</svg>
+
+<!-- Burst flash -->
+<div id="burst"></div>
+
+<!-- Mute toggle -->
+<button id="mute-btn" title="Mute / Unmute" onclick="toggleMute()">🔊</button>
+
+<!-- Confetti canvas -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- ===== PASSWORD SCREEN ===== -->
+<!--
+  🔐 GANTI PASSWORD: Ubah nilai CORRECT_PASSWORD di bagian <script> di bawah
+  Default password: 1234
+-->
+<div id="password-screen">
+  <!-- Floating background stars -->
+  <div class="pw-star" style="left:8%;  top:12%; --d:5s;   --dl:0s">⭐</div>
+  <div class="pw-star" style="right:10%;top:18%; --d:6.5s; --dl:-1s">✨</div>
+  <div class="pw-star" style="left:15%;bottom:20%;--d:7s;  --dl:-2s">🌟</div>
+  <div class="pw-star" style="right:8%;bottom:15%;--d:5.5s;--dl:-0.5s">💫</div>
+  <div class="pw-star" style="left:50%;top:8%;  --d:4.5s; --dl:-3s">⭐</div>
+  <div class="pw-star" style="left:5%; top:50%; --d:8s;   --dl:-1.5s">✨</div>
+  <div class="pw-star" style="right:5%;top:55%; --d:6s;   --dl:-2.5s">🌟</div>
+
+  <div class="pw-castle-icon">🏰</div>
+  <div class="pw-title">Magical Gate</div>
+  <div class="pw-subtitle">Masukkan kode rahasia untuk melanjutkan</div>
+
+  <div class="pw-card">
+    <div class="pw-label">🔑 Kode Rahasia</div>
+
+    <!-- Dot indicators -->
+    <div class="pw-dots" id="pw-dots">
+      <div class="pw-dot" id="dot-0"></div>
+      <div class="pw-dot" id="dot-1"></div>
+      <div class="pw-dot" id="dot-2"></div>
+      <div class="pw-dot" id="dot-3"></div>
+    </div>
+
+    <!-- Error text -->
+    <div class="pw-error" id="pw-error"></div>
+
+    <!-- Numpad -->
+    <div class="pw-numpad">
+      <button class="pw-key" onclick="pwPress('1')">1</button>
+      <button class="pw-key" onclick="pwPress('2')">2</button>
+      <button class="pw-key" onclick="pwPress('3')">3</button>
+      <button class="pw-key" onclick="pwPress('4')">4</button>
+      <button class="pw-key" onclick="pwPress('5')">5</button>
+      <button class="pw-key" onclick="pwPress('6')">6</button>
+      <button class="pw-key" onclick="pwPress('7')">7</button>
+      <button class="pw-key" onclick="pwPress('8')">8</button>
+      <button class="pw-key" onclick="pwPress('9')">9</button>
+      <button class="pw-key key-del" onclick="pwDelete()">⌫ Hapus</button>
+      <button class="pw-key" onclick="pwPress('0')">0</button>
+      <button class="pw-key key-ok" onclick="pwConfirm()">✨ Buka!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GIFT SCREEN ===== -->
+<div id="gift-screen">
+  <div class="magic-text">✨ Klik kado untuk membuka! ✨</div>
+
+  <div class="gift-wrapper" id="gift" onclick="handleClick(event)">
+    <!-- Progress ring -->
+    <svg class="progress-ring-wrap" width="200" height="200" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(255,215,0,0.15)" stroke-width="6"/>
+      <circle id="progress-ring" class="progress-ring-circle" cx="100" cy="100" r="90"
+        fill="none" stroke="#FFD700" stroke-width="6"
+        stroke-dasharray="565" stroke-dashoffset="565"
+        stroke-linecap="round"/>
+    </svg>
+    <!-- Gift SVG -->
+    <svg class="gift-svg" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+      <!-- Box -->
+      <rect x="20" y="85" width="140" height="90" rx="8" fill="#E8002D"/>
+      <rect x="20" y="85" width="140" height="90" rx="8" fill="url(#boxGrad)"/>
+      <!-- Lid -->
+      <rect x="10" y="65" width="160" height="30" rx="6" fill="#C8001D"/>
+      <rect x="10" y="65" width="160" height="30" rx="6" fill="url(#lidGrad)"/>
+      <!-- Ribbon vertical -->
+      <rect x="80" y="65" width="20" height="110" fill="url(#ribbonGrad)"/>
+      <!-- Ribbon horizontal -->
+      <rect x="10" y="73" width="160" height="14" fill="url(#ribbonGrad)"/>
+      <!-- Bow left -->
+      <ellipse cx="70" cy="62" rx="28" ry="16" fill="#FFD700" transform="rotate(-20 70 62)"/>
+      <ellipse cx="70" cy="62" rx="28" ry="16" fill="url(#bowGrad)" transform="rotate(-20 70 62)"/>
+      <!-- Bow right -->
+      <ellipse cx="110" cy="62" rx="28" ry="16" fill="#FFD700" transform="rotate(20 110 62)"/>
+      <ellipse cx="110" cy="62" rx="28" ry="16" fill="url(#bowGrad)" transform="rotate(20 110 62)"/>
+      <!-- Bow center -->
+      <circle cx="90" cy="63" r="12" fill="#FF8C00"/>
+      <circle cx="90" cy="63" r="8" fill="#FFD700"/>
+      <!-- Stars on box -->
+      <text x="35" y="120" font-size="18" opacity="0.7">⭐</text>
+      <text x="120" y="145" font-size="14" opacity="0.7">✨</text>
+      <text x="50" y="155" font-size="12" opacity="0.6">🌟</text>
+      <defs>
+        <linearGradient id="boxGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(255,100,100,0.3)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.2)"/>
+        </linearGradient>
+        <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.2)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+        </linearGradient>
+        <linearGradient id="ribbonGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#FF8C00"/>
+          <stop offset="50%" stop-color="#FFD700"/>
+          <stop offset="100%" stop-color="#FF8C00"/>
+        </linearGradient>
+        <linearGradient id="bowGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.3)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <div class="click-counter" id="click-counter"></div>
+  <div class="click-hint" id="click-hint">👆 Tap / Klik kado!</div>
+</div>
+
+<!-- ===== CELEBRATION SCREEN ===== -->
+<div id="celebration-screen">
+  <div class="disney-logo-star">⭐</div>
+
+  <div class="hbd-title">Happy Birthday!</div>
+
+  <div class="sparkle-ring">
+    <div class="sparkle" style="--r:110px; --od:5s; --odelay:0s">✨</div>
+    <div class="sparkle" style="--r:110px; --od:5s; --odelay:-1.25s">🌟</div>
+    <div class="sparkle" style="--r:110px; --od:5s; --odelay:-2.5s">⭐</div>
+    <div class="sparkle" style="--r:110px; --od:5s; --odelay:-3.75s">💫</div>
+    <div class="name-display" id="name-display">Nama</div>
+  </div>
+
+  <div class="name-input-wrap">
+    <label>✏️ Ganti nama di sini</label>
+    <input class="name-input" id="name-input" type="text" placeholder="Tulis nama..." maxlength="20" oninput="updateName(this.value)"/>
+  </div>
+
+  <div class="wish-message">
+    🏰 Semoga hari ulang tahunmu dipenuhi keajaiban seperti Disney!<br>
+    Semoga impianmu jadi kenyataan, seperti Cinderella yang menemukan sepatunya. 
+    Selamat ulang tahun, teruslah bersinar! 🌠
+  </div>
+
+  <button class="restart-btn" onclick="restart()">🎁 Ulangi Lagi</button>
+</div>
+
+<!-- Disney-style Characters -->
+<div class="character" style="left:3%; top:15%; --dur:5s; --delay:0s; --up:-18px; --rot-start:-8deg; --rot-end:8deg;">🏰</div>
+
+<!-- ===== 4 PHOTO FRAMES =====
+  💡 CARA PAKAI: Klik salah satu frame → pilih foto dari galeri/kamera
+  Foto langsung muncul di frame tersebut.
+  Tiap frame bisa diisi foto berbeda.
+-->
+
+<!-- Frame 1: Kiri Atas -->
+<div class="photo-frame-wrap corner-tl" id="frame-tl">
+  <div class="photo-frame" onclick="document.getElementById('input-tl').click()">
+    <div class="frame-border">
+      <div class="frame-mat">
+        <div class="frame-placeholder" id="placeholder-tl">
+          <span class="ph-icon">📷</span>
+          <span class="ph-text">Tap untuk<br>tambah foto</span>
+        </div>
+        <img class="frame-photo" id="photo-tl" style="display:none" alt="foto"/>
+      </div>
+    </div>
+    <span class="frame-ornament tl">⭐</span>
+    <span class="frame-ornament tr">✨</span>
+    <span class="frame-ornament bl">✨</span>
+    <span class="frame-ornament br">⭐</span>
+  </div>
+  <div class="frame-caption">✨ Momen Ajaib</div>
+  <input class="frame-input" id="input-tl" type="file" accept="image/*" onchange="loadPhoto(this,'photo-tl','placeholder-tl')"/>
+</div>
+
+<!-- Frame 2: Kanan Atas -->
+<div class="photo-frame-wrap corner-tr" id="frame-tr">
+  <div class="photo-frame" onclick="document.getElementById('input-tr').click()">
+    <div class="frame-border">
+      <div class="frame-mat">
+        <div class="frame-placeholder" id="placeholder-tr">
+          <span class="ph-icon">🌟</span>
+          <span class="ph-text">Tap untuk<br>tambah foto</span>
+        </div>
+        <img class="frame-photo" id="photo-tr" style="display:none" alt="foto"/>
+      </div>
+    </div>
+    <span class="frame-ornament tl">💫</span>
+    <span class="frame-ornament tr">⭐</span>
+    <span class="frame-ornament bl">⭐</span>
+    <span class="frame-ornament br">💫</span>
+  </div>
+  <div class="frame-caption">🏰 Kenangan Indah</div>
+  <input class="frame-input" id="input-tr" type="file" accept="image/*" onchange="loadPhoto(this,'photo-tr','placeholder-tr')"/>
+</div>
+
+<!-- Frame 3: Kiri Bawah -->
+<div class="photo-frame-wrap corner-bl" id="frame-bl">
+  <div class="photo-frame" onclick="document.getElementById('input-bl').click()">
+    <div class="frame-border">
+      <div class="frame-mat">
+        <div class="frame-placeholder" id="placeholder-bl">
+          <span class="ph-icon">🎠</span>
+          <span class="ph-text">Tap untuk<br>tambah foto</span>
+        </div>
+        <img class="frame-photo" id="photo-bl" style="display:none" alt="foto"/>
+      </div>
+    </div>
+    <span class="frame-ornament tl">🌟</span>
+    <span class="frame-ornament tr">✨</span>
+    <span class="frame-ornament bl">✨</span>
+    <span class="frame-ornament br">🌟</span>
+  </div>
+  <div class="frame-caption">🎈 Saat Bahagia</div>
+  <input class="frame-input" id="input-bl" type="file" accept="image/*" onchange="loadPhoto(this,'photo-bl','placeholder-bl')"/>
+</div>
+
+<!-- Frame 4: Kanan Bawah -->
+<div class="photo-frame-wrap corner-br" id="frame-br">
+  <div class="photo-frame" onclick="document.getElementById('input-br').click()">
+    <div class="frame-border">
+      <div class="frame-mat">
+        <div class="frame-placeholder" id="placeholder-br">
+          <span class="ph-icon">💎</span>
+          <span class="ph-text">Tap untuk<br>tambah foto</span>
+        </div>
+        <img class="frame-photo" id="photo-br" style="display:none" alt="foto"/>
+      </div>
+    </div>
+    <span class="frame-ornament tl">⭐</span>
+    <span class="frame-ornament tr">💫</span>
+    <span class="frame-ornament bl">💫</span>
+    <span class="frame-ornament br">⭐</span>
+  </div>
+  <div class="frame-caption">💖 Penuh Cinta</div>
+  <input class="frame-input" id="input-br" type="file" accept="image/*" onchange="loadPhoto(this,'photo-br','placeholder-br')"/>
+</div>
+<div class="character" style="right:3%; top:20%; --dur:6s; --delay:-1s; --up:-22px; --rot-start:5deg; --rot-end:-5deg;">🎠</div>
+<div class="character" style="left:5%; bottom:25%; --dur:7s; --delay:-2s; --up:-15px; --rot-start:-6deg; --rot-end:6deg;">🦋</div>
+<div class="character" style="right:5%; bottom:30%; --dur:5.5s; --delay:-3s; --up:-20px; --rot-start:7deg; --rot-end:-7deg;">🌈</div>
+<div class="character" style="left:2%; top:45%; --dur:8s; --delay:-0.5s; --up:-25px; --rot-start:-4deg; --rot-end:4deg;">🎆</div>
+<div class="character" style="right:2%; top:50%; --dur:6.5s; --delay:-2.5s; --up:-18px; --rot-start:6deg; --rot-end:-6deg;">🎇</div>
+<div class="character" style="left:8%; top:5%; --dur:4s; --delay:-1.5s; --up:-12px; --rot-start:-10deg; --rot-end:10deg;">⭐</div>
+<div class="character" style="right:8%; top:8%; --dur:5s; --delay:-0.8s; --up:-16px; --rot-start:8deg; --rot-end:-8deg;">🌟</div>
+<div class="character" style="left:15%; bottom:5%; --dur:6s; --delay:-3.5s; --up:-14px; --rot-start:-5deg; --rot-end:5deg;">🎈</div>
+<div class="character" style="right:15%; bottom:8%; --dur:7s; --delay:-1.2s; --up:-20px; --rot-start:4deg; --rot-end:-4deg;">🎉</div>
+<div class="character" style="left:30%; top:2%; --dur:5.5s; --delay:-2s; --up:-18px; --rot-start:-7deg; --rot-end:7deg;">💎</div>
+<div class="character" style="right:28%; top:3%; --dur:6s; --delay:-0.3s; --up:-15px; --rot-start:5deg; --rot-end:-5deg;">🔮</div>
+<div class="character" style="left:42%; bottom:2%; --dur:4.5s; --delay:-4s; --up:-22px; --rot-start:-9deg; --rot-end:9deg;">🎂</div>
+
+<!-- ===== WALKING CHARACTERS LANE ===== -->
+<!--
+  💡 CARA GANTI KARAKTER:
+  Ubah nilai data-emoji dan data-name di setiap <div class="walker">
+  Bisa pakai emoji apapun! Contoh: 🐭 🐮 🦁 🐸 🦊 🐧 🦄 🐲 🧚 🧜 dll.
+  data-dir="right"  = berjalan ke kanan
+  data-dir="left"   = berjalan ke kiri (otomatis di-flip)
+-->
+<div id="walking-lane">
+
+  <!-- KARAKTER 1 — Ganti emoji & nama di bawah ini -->
+  <div class="walker" data-emoji="🐭" data-name="Mickey" data-dir="right" data-speed="18" data-delay="0">
+    <div class="walker-body"></div>
+    <div class="walker-shadow"></div>
+    <div class="walker-label"></div>
+  </div>
+
+  <!-- KARAKTER 2 -->
+  <div class="walker" data-emoji="🦁" data-name="Simba" data-dir="left" data-speed="22" data-delay="3">
+    <div class="walker-body"></div>
+    <div class="walker-shadow"></div>
+    <div class="walker-label"></div>
+  </div>
+
+  <!-- KARAKTER 3 -->
+  <div class="walker" data-emoji="🧚" data-name="Tinker Bell" data-dir="right" data-speed="15" data-delay="7">
+    <div class="walker-body"></div>
+    <div class="walker-shadow"></div>
+    <div class="walker-label"></div>
+  </div>
+
+  <!-- KARAKTER 4 -->
+  <div class="walker" data-emoji="🦄" data-name="Unicorn" data-dir="left" data-speed="25" data-delay="1">
+    <div class="walker-body"></div>
+    <div class="walker-shadow"></div>
+    <div class="walker-label"></div>
+  </div>
+
+  <!-- KARAKTER 5 -->
+  <div class="walker" data-emoji="🐉" data-name="Mushu" data-dir="right" data-speed="20" data-delay="5">
+    <div class="walker-body"></div>
+    <div class="walker-shadow"></div>
+    <div class="walker-label"></div>
+  </div>
+
+</div>
+
+<script>
+  // ===== 🔐 PASSWORD CONFIG =====
+  // Ganti angka di bawah ini dengan password yang kamu inginkan
+  const CORRECT_PASSWORD = '1234';
+
+  let pwInput = '';
+  const PW_LENGTH = CORRECT_PASSWORD.length;
+
+  // Resize dots to match password length
+  (function initDots() {
+    const dotsEl = document.getElementById('pw-dots');
+    dotsEl.innerHTML = '';
+    for (let i = 0; i < PW_LENGTH; i++) {
+      const d = document.createElement('div');
+      d.className = 'pw-dot';
+      d.id = 'dot-' + i;
+      dotsEl.appendChild(d);
+    }
+  })();
+
+  function pwPress(digit) {
+    if (pwInput.length >= PW_LENGTH) return;
+    pwInput += digit;
+    updateDots();
+    playSparklePop();
+    document.getElementById('pw-error').textContent = '';
+    if (pwInput.length === PW_LENGTH) {
+      setTimeout(pwConfirm, 250);
+    }
+  }
+
+  function pwDelete() {
+    pwInput = pwInput.slice(0, -1);
+    updateDots();
+    document.getElementById('pw-error').textContent = '';
+  }
+
+  function updateDots() {
+    for (let i = 0; i < PW_LENGTH; i++) {
+      const d = document.getElementById('dot-' + i);
+      if (!d) continue;
+      d.classList.toggle('filled', i < pwInput.length);
+      d.classList.remove('wrong');
+    }
+  }
+
+  function pwConfirm() {
+    if (pwInput.length < PW_LENGTH) {
+      document.getElementById('pw-error').textContent = `Password harus ${PW_LENGTH} digit!`;
+      return;
+    }
+    if (pwInput === CORRECT_PASSWORD) {
+      // ✅ Correct — sparkle sound + transition
+      playSparklePop();
+      setTimeout(playSparklePop, 120);
+      setTimeout(playSparklePop, 240);
+      const screen = document.getElementById('password-screen');
+      screen.classList.add('hide-out');
+      setTimeout(() => { screen.style.display = 'none'; }, 800);
+    } else {
+      // ❌ Wrong — shake dots + error
+      for (let i = 0; i < PW_LENGTH; i++) {
+        const d = document.getElementById('dot-' + i);
+        if (d) { d.classList.remove('filled'); d.classList.add('wrong'); }
+      }
+      document.getElementById('pw-error').textContent = '✨ Kode salah, coba lagi!';
+      // Reset after shake
+      setTimeout(() => {
+        pwInput = '';
+        for (let i = 0; i < PW_LENGTH; i++) {
+          const d = document.getElementById('dot-' + i);
+          if (d) { d.classList.remove('wrong', 'filled'); }
+        }
+      }, 600);
+    }
+  }
+
+  // Allow keyboard input on desktop
+  document.addEventListener('keydown', (e) => {
+    if (document.getElementById('password-screen').style.display === 'none') return;
+    if (e.key >= '0' && e.key <= '9') pwPress(e.key);
+    else if (e.key === 'Backspace') pwDelete();
+    else if (e.key === 'Enter') pwConfirm();
+  });
+
+  // ===== STARS =====
+  const starsEl = document.getElementById('stars-bg');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star-dot';
+    const size = Math.random() * 3 + 1;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      --d:${(Math.random()*3+1).toFixed(1)}s;
+      animation-delay:${(Math.random()*3).toFixed(1)}s;
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // ===== WEB AUDIO ENGINE =====
+  let audioCtx = null;
+  let musicNodes = [];   // keep refs to stop later
+  let musicPlaying = false;
+
+  function getAudioCtx() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    return audioCtx;
+  }
+
+  // --- Utility: master gain ---
+  function makeMasterGain(vol) {
+    const ac = getAudioCtx();
+    const g = ac.createGain();
+    g.gain.value = vol;
+    g.connect(ac.destination);
+    return g;
+  }
+
+  // ✨ SPARKLE / MAGIC POP — played on each gift click
+  function playSparklePop() {
+    const ac = getAudioCtx();
+    const master = makeMasterGain(0.45);
+
+    // Randomise pitch slightly each tap for variety
+    const baseFreq = 880 + Math.random() * 440;  // A5–A6 range
+
+    // 1) Short bright sine burst (the "pop")
+    const osc1 = ac.createOscillator();
+    const env1 = ac.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(baseFreq, ac.currentTime);
+    osc1.frequency.exponentialRampToValueAtTime(baseFreq * 1.8, ac.currentTime + 0.06);
+    env1.gain.setValueAtTime(0.6, ac.currentTime);
+    env1.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.18);
+    osc1.connect(env1); env1.connect(master);
+    osc1.start(ac.currentTime);
+    osc1.stop(ac.currentTime + 0.2);
+
+    // 2) Sparkling shimmer overtone
+    const osc2 = ac.createOscillator();
+    const env2 = ac.createGain();
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(baseFreq * 2.5, ac.currentTime);
+    osc2.frequency.exponentialRampToValueAtTime(baseFreq * 4, ac.currentTime + 0.12);
+    env2.gain.setValueAtTime(0.3, ac.currentTime);
+    env2.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.25);
+    osc2.connect(env2); env2.connect(master);
+    osc2.start(ac.currentTime);
+    osc2.stop(ac.currentTime + 0.28);
+
+    // 3) Tiny noise "fizz"
+    const bufLen = ac.sampleRate * 0.08;
+    const noiseBuffer = ac.createBuffer(1, bufLen, ac.sampleRate);
+    const data = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufLen; i++) data[i] = (Math.random() * 2 - 1) * 0.15;
+    const noise = ac.createBufferSource();
+    noise.buffer = noiseBuffer;
+    const noiseFilter = ac.createBiquadFilter();
+    noiseFilter.type = 'highpass';
+    noiseFilter.frequency.value = 4000;
+    const noiseEnv = ac.createGain();
+    noiseEnv.gain.setValueAtTime(0.4, ac.currentTime);
+    noiseEnv.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.08);
+    noise.connect(noiseFilter); noiseFilter.connect(noiseEnv); noiseEnv.connect(master);
+    noise.start(ac.currentTime);
+  }
+
+  // 💥 OPEN BURST — big magical explosion sound when gift opens
+  function playOpenBurst() {
+    const ac = getAudioCtx();
+
+    // a) Deep BOOM
+    const boom = ac.createOscillator();
+    const boomEnv = ac.createGain();
+    boom.type = 'sine';
+    boom.frequency.setValueAtTime(120, ac.currentTime);
+    boom.frequency.exponentialRampToValueAtTime(40, ac.currentTime + 0.4);
+    boomEnv.gain.setValueAtTime(1.0, ac.currentTime);
+    boomEnv.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.5);
+    const boomGain = makeMasterGain(0.6);
+    boom.connect(boomEnv); boomEnv.connect(boomGain);
+    boom.start(ac.currentTime); boom.stop(ac.currentTime + 0.55);
+
+    // b) Magic sparkle cascade — 8 random high tones fanning out
+    for (let i = 0; i < 8; i++) {
+      const t = ac.currentTime + i * 0.055;
+      const freq = 1200 + Math.random() * 2000;
+      const o = ac.createOscillator();
+      const g = ac.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(freq, t);
+      o.frequency.exponentialRampToValueAtTime(freq * 1.5, t + 0.3);
+      g.gain.setValueAtTime(0.35, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+      const mg = makeMasterGain(0.5);
+      o.connect(g); g.connect(mg);
+      o.start(t); o.stop(t + 0.5);
+    }
+
+    // c) Rising sweep — "ta-daa" swoosh
+    const sweep = ac.createOscillator();
+    const sweepEnv = ac.createGain();
+    sweep.type = 'sawtooth';
+    sweep.frequency.setValueAtTime(200, ac.currentTime + 0.1);
+    sweep.frequency.exponentialRampToValueAtTime(1200, ac.currentTime + 0.55);
+    sweepEnv.gain.setValueAtTime(0.0, ac.currentTime + 0.1);
+    sweepEnv.gain.linearRampToValueAtTime(0.4, ac.currentTime + 0.2);
+    sweepEnv.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.7);
+    const sweepFilter = ac.createBiquadFilter();
+    sweepFilter.type = 'bandpass';
+    sweepFilter.frequency.value = 800;
+    sweepFilter.Q.value = 2;
+    const sweepGain = makeMasterGain(0.5);
+    sweep.connect(sweepFilter); sweepFilter.connect(sweepEnv); sweepEnv.connect(sweepGain);
+    sweep.start(ac.currentTime + 0.1); sweep.stop(ac.currentTime + 0.75);
+
+    // d) Crowd chime cluster (happy bells)
+    const bellNotes = [523, 659, 784, 1047, 1319];
+    bellNotes.forEach((freq, i) => {
+      const t = ac.currentTime + 0.5 + i * 0.12;
+      const o = ac.createOscillator();
+      const g = ac.createGain();
+      o.type = 'sine';
+      o.frequency.value = freq;
+      g.gain.setValueAtTime(0.5, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.8);
+      const mg = makeMasterGain(0.4);
+      o.connect(g); g.connect(mg);
+      o.start(t); o.stop(t + 0.85);
+    });
+  }
+
+  // 🏰 DISNEY ORCHESTRAL BACKSOUND — looping generative melody
+  // Built from actual "When You Wish Upon a Star" scale motifs + orchestral layers
+  function startDisneyMusic() {
+    if (musicPlaying) return;
+    musicPlaying = true;
+    const ac = getAudioCtx();
+
+    // ---- MELODY (glockenspiel / celesta timbre) ----
+    // "When You Wish Upon a Star" main motif intervals (C major)
+    const melodyNotes = [
+      // Phrase 1
+      {f:523.25,d:0.5},{f:587.33,d:0.25},{f:659.25,d:0.25},{f:698.46,d:1.0},
+      {f:659.25,d:0.5},{f:587.33,d:0.5},{f:523.25,d:1.0},
+      // Phrase 2
+      {f:392.00,d:0.5},{f:440.00,d:0.25},{f:493.88,d:0.25},{f:523.25,d:1.0},
+      {f:493.88,d:0.5},{f:440.00,d:0.5},{f:392.00,d:1.5},
+      // Phrase 3 (higher)
+      {f:1046.5,d:0.5},{f:987.77,d:0.25},{f:880.00,d:0.25},{f:783.99,d:0.75},
+      {f:880.00,d:0.25},{f:987.77,d:0.5},{f:1046.5,d:1.0},
+      // Phrase 4 resolve
+      {f:659.25,d:0.5},{f:698.46,d:0.5},{f:783.99,d:0.5},{f:880.00,d:0.5},
+      {f:987.77,d:0.5},{f:1046.5,d:0.5},{f:1174.7,d:2.0},
+      // Bridge
+      {f:523.25,d:0.33},{f:659.25,d:0.33},{f:783.99,d:0.33},
+      {f:1046.5,d:0.5},{f:987.77,d:0.5},{f:880.00,d:1.0},
+      {f:783.99,d:0.5},{f:698.46,d:0.5},{f:659.25,d:2.0},
+    ];
+
+    function scheduleMelody(startTime) {
+      let t = startTime;
+      const phraseNodes = [];
+      melodyNotes.forEach(note => {
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+        const vib = ac.createOscillator(); // vibrato LFO
+        const vibGain = ac.createGain();
+
+        o.type = 'sine';
+        o.frequency.value = note.f;
+        vib.type = 'sine';
+        vib.frequency.value = 5.5;
+        vibGain.gain.value = note.f * 0.012;
+        vib.connect(vibGain);
+        vibGain.connect(o.frequency);
+
+        // Bell-like envelope: sharp attack, long decay
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.55, t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.18, t + note.d * 0.4);
+        g.gain.exponentialRampToValueAtTime(0.001, t + note.d * 0.95);
+
+        // Harmonic overtone for celesta shimmer
+        const o2 = ac.createOscillator();
+        const g2 = ac.createGain();
+        o2.type = 'triangle';
+        o2.frequency.value = note.f * 2.756; // inharmonic partial = bell character
+        g2.gain.setValueAtTime(0, t);
+        g2.gain.linearRampToValueAtTime(0.15, t + 0.01);
+        g2.gain.exponentialRampToValueAtTime(0.001, t + note.d * 0.5);
+
+        const melGain = makeMasterGain(0.28);
+        o.connect(g); g.connect(melGain);
+        o2.connect(g2); g2.connect(melGain);
+
+        o.start(t); o2.start(t); vib.start(t);
+        o.stop(t + note.d + 0.1);
+        o2.stop(t + note.d + 0.1);
+        vib.stop(t + note.d + 0.1);
+
+        phraseNodes.push(o, o2, vib);
+        t += note.d * (60 / 76); // tempo ≈ 76 BPM
+      });
+      musicNodes.push(...phraseNodes);
+      return t; // end time
+    }
+
+    // ---- HARMONY (string pads) ----
+    // C major chord progression: C - Am - F - G cycling
+    const chords = [
+      [261.63, 329.63, 392.00],  // C
+      [220.00, 261.63, 329.63],  // Am
+      [174.61, 220.00, 261.63],  // F
+      [196.00, 246.94, 293.66],  // G
+    ];
+
+    function scheduleChords(startTime, totalDuration) {
+      const chordDur = 2.0;
+      let t = startTime;
+      while (t < startTime + totalDuration) {
+        const chord = chords[Math.floor((t - startTime) / chordDur) % chords.length];
+        chord.forEach(freq => {
+          const o = ac.createOscillator();
+          const g = ac.createGain();
+          o.type = 'sawtooth';
+          o.frequency.value = freq;
+          // Soft string filter
+          const filt = ac.createBiquadFilter();
+          filt.type = 'lowpass';
+          filt.frequency.value = 600;
+          filt.Q.value = 0.5;
+          g.gain.setValueAtTime(0, t);
+          g.gain.linearRampToValueAtTime(0.12, t + 0.3);
+          g.gain.setValueAtTime(0.12, t + chordDur - 0.3);
+          g.gain.linearRampToValueAtTime(0, t + chordDur);
+          const padGain = makeMasterGain(0.18);
+          o.connect(filt); filt.connect(g); g.connect(padGain);
+          o.start(t); o.stop(t + chordDur + 0.05);
+          musicNodes.push(o);
+        });
+        t += chordDur;
+      }
+    }
+
+    // ---- HARP ARPEGGIOS ----
+    function scheduleHarp(startTime, totalDuration) {
+      const arpPattern = [261.63, 329.63, 392.00, 523.25, 659.25, 523.25, 392.00, 329.63];
+      const stepDur = 0.18;
+      let t = startTime;
+      let idx = 0;
+      while (t < startTime + totalDuration) {
+        const freq = arpPattern[idx % arpPattern.length];
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+        o.type = 'sine';
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0.18, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + stepDur * 2.5);
+        const harpGain = makeMasterGain(0.18);
+        o.connect(g); g.connect(harpGain);
+        o.start(t); o.stop(t + stepDur * 3);
+        musicNodes.push(o);
+        t += stepDur;
+        idx++;
+      }
+    }
+
+    // ---- BASS (pizzicato-ish) ----
+    function scheduleBass(startTime, totalDuration) {
+      const bassNotes = [130.81, 110.00, 87.31, 98.00]; // C2 A1 F1 G1
+      const dur = 2.0;
+      let t = startTime;
+      let idx = 0;
+      while (t < startTime + totalDuration) {
+        const freq = bassNotes[idx % bassNotes.length];
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+        o.type = 'triangle';
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0.5, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+        const bassGain = makeMasterGain(0.22);
+        o.connect(g); g.connect(bassGain);
+        o.start(t); o.stop(t + 0.65);
+        musicNodes.push(o);
+        t += dur;
+        idx++;
+      }
+    }
+
+    // ---- SCHEDULE ONE FULL LOOP ----
+    const LOOP_DUR = 28; // seconds per loop
+
+    function scheduleLoop(startTime) {
+      if (!musicPlaying) return;
+      const endTime = scheduleMelody(startTime);
+      scheduleChords(startTime, LOOP_DUR);
+      scheduleHarp(startTime + 0.5, LOOP_DUR);
+      scheduleBass(startTime, LOOP_DUR);
+      // Schedule next loop just before this one ends
+      const nextStart = startTime + LOOP_DUR;
+      const msUntilNext = (nextStart - ac.currentTime - 0.5) * 1000;
+      const loopTimer = setTimeout(() => {
+        if (musicPlaying) scheduleLoop(nextStart);
+      }, Math.max(100, msUntilNext));
+      musicNodes.push({ _timer: loopTimer }); // store for cleanup
+    }
+
+    scheduleLoop(ac.currentTime + 0.1);
+  }
+
+  function stopDisneyMusic() {
+    musicPlaying = false;
+    musicNodes.forEach(n => {
+      if (n._timer) clearTimeout(n._timer);
+      else { try { n.stop(); } catch(e) {} }
+    });
+    musicNodes = [];
+  }
+
+  // ===== CLICK LOGIC =====
+  const TOTAL_CLICKS = 10;
+  let clicks = 0;
+  const ring = document.getElementById('progress-ring');
+  const circumference = 2 * Math.PI * 90;
+  const clickCounter = document.getElementById('click-counter');
+  const clickHint = document.getElementById('click-hint');
+  const gift = document.getElementById('gift');
+
+  const emojis = ['✨','⭐','🌟','💫','🎉','🎊','💎','🌈','🏰','🎠'];
+
+  function handleClick(e) {
+    if (clicks >= TOTAL_CLICKS) return;
+    clicks++;
+
+    // ✨ Sparkle pop sound
+    playSparklePop();
+
+    // Shake gift
+    gift.classList.remove('shake');
+    void gift.offsetWidth;
+    gift.classList.add('shake');
+
+    // Update ring
+    const offset = circumference - (clicks / TOTAL_CLICKS) * circumference;
+    ring.style.strokeDashoffset = offset;
+
+    // Update counter
+    const left = TOTAL_CLICKS - clicks;
+    if (left > 0) {
+      clickCounter.textContent = `${left}x lagi! 🎁`;
+    }
+
+    // Pop emoji
+    spawnPop(e.clientX, e.clientY);
+
+    // Hints
+    if (clicks === 3) clickHint.textContent = '🔥 Terus klik! Hampir terbuka!';
+    if (clicks === 6) clickHint.textContent = '💥 Ayo semangat! Sebentar lagi!';
+    if (clicks === 8) clickHint.textContent = '🚀 HAMPIR TERBUKA!!!';
+
+    if (clicks >= TOTAL_CLICKS) {
+      setTimeout(openGift, 300);
+    }
+  }
+
+  function spawnPop(x, y) {
+    const el = document.createElement('div');
+    el.className = 'pop-star';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = (x - 15 + (Math.random()*30-15)) + 'px';
+    el.style.top  = (y - 15) + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1000);
+  }
+
+  function openGift() {
+    // 💥 Explosion + magic sound
+    playOpenBurst();
+
+    // 🏰 Start Disney orchestral music
+    setTimeout(startDisneyMusic, 800);
+
+    // Flash burst
+    const burst = document.getElementById('burst');
+    burst.classList.add('flash');
+    setTimeout(() => burst.classList.remove('flash'), 700);
+
+    // Switch screens
+    document.getElementById('gift-screen').style.display = 'none';
+    const cel = document.getElementById('celebration-screen');
+    cel.classList.add('active');
+
+    // Show walking lane
+    document.getElementById('walking-lane').classList.add('active');
+    initWalkers();
+
+    // Show photo frames
+    showFrames();
+
+    // Start confetti
+    startConfetti();
+    setTimeout(stopConfetti, 6000);
+
+    // Fireworks
+    for (let i = 0; i < 8; i++) {
+      setTimeout(fireFirework, i * 400 + 200);
+    }
+  }
+
+  function updateName(val) {
+    document.getElementById('name-display').textContent = val || 'Nama';
+  }
+
+  function restart() {
+    clicks = 0;
+    ring.style.strokeDashoffset = circumference;
+    clickCounter.textContent = '';
+    clickHint.textContent = '👆 Tap / Klik kado!';
+    gift.classList.remove('shake');
+    document.getElementById('celebration-screen').classList.remove('active');
+    document.getElementById('gift-screen').style.display = 'flex';
+    document.getElementById('walking-lane').classList.remove('active');
+    stopWalkers();
+    stopConfetti();
+    stopDisneyMusic();
+    hideFrames();
+  }
+
+  // ===== CONFETTI =====
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
+  let confettiPieces = [];
+  let animFrame;
+  let running = false;
+
+  const confettiColors = ['#FFD700','#FF6EB4','#87CEEB','#E8002D','#7B2FBE','#FF8C00','#00CED1','#FFF176','#98FB98'];
+  const shapes = ['rect','circle','star'];
+
+  function startConfetti() {
+    running = true;
+    confettiPieces = [];
+    for (let i = 0; i < 200; i++) {
+      confettiPieces.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        size: Math.random() * 10 + 5,
+        color: confettiColors[Math.floor(Math.random()*confettiColors.length)],
+        speed: Math.random() * 4 + 2,
+        spin: Math.random() * 6 - 3,
+        angle: Math.random() * 360,
+        shape: shapes[Math.floor(Math.random()*shapes.length)],
+        sway: Math.random() * 2 - 1,
+        swayCounter: Math.random() * 100
+      });
+    }
+    animateConfetti();
+  }
+
+  function stopConfetti() {
+    running = false;
+    cancelAnimationFrame(animFrame);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confettiPieces = [];
+  }
+
+  function animateConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confettiPieces.forEach(p => {
+      p.y += p.speed;
+      p.swayCounter += 0.05;
+      p.x += Math.sin(p.swayCounter) * p.sway * 2;
+      p.angle += p.spin;
+      if (p.y > canvas.height + 20) {
+        p.y = -20;
+        p.x = Math.random() * canvas.width;
+      }
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = 0.9;
+      if (p.shape === 'rect') {
+        ctx.fillRect(-p.size/2, -p.size/4, p.size, p.size/2);
+      } else if (p.shape === 'circle') {
+        ctx.beginPath();
+        ctx.arc(0, 0, p.size/2, 0, Math.PI*2);
+        ctx.fill();
+      } else {
+        drawStar(ctx, 0, 0, 5, p.size/2, p.size/4);
+        ctx.fill();
+      }
+      ctx.restore();
+    });
+    if (running) animFrame = requestAnimationFrame(animateConfetti);
+  }
+
+  function drawStar(ctx, cx, cy, spikes, outerR, innerR) {
+    let rot = (Math.PI / 2) * 3;
+    const step = Math.PI / spikes;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - outerR);
+    for (let i = 0; i < spikes; i++) {
+      ctx.lineTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR);
+      rot += step;
+      ctx.lineTo(cx + Math.cos(rot) * innerR, cy + Math.sin(rot) * innerR);
+      rot += step;
+    }
+    ctx.lineTo(cx, cy - outerR);
+    ctx.closePath();
+  }
+
+  // ===== FIREWORKS =====
+  function fireFirework() {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height * 0.6;
+    const color = confettiColors[Math.floor(Math.random()*confettiColors.length)];
+    const particles = [];
+    for (let i = 0; i < 60; i++) {
+      const angle = (i / 60) * Math.PI * 2;
+      const speed = Math.random() * 6 + 2;
+      particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        alpha: 1,
+        color
+      });
+    }
+    let fwFrame;
+    function drawFw() {
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.15;
+        p.alpha -= 0.02;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2.5, 0, Math.PI*2);
+        ctx.fill();
+        ctx.restore();
+      });
+      if (particles[0].alpha > 0) fwFrame = requestAnimationFrame(drawFw);
+    }
+    drawFw();
+  }
+
+  // Set initial ring
+  ring.style.strokeDasharray = circumference;
+  ring.style.strokeDashoffset = circumference;
+
+  // ===== WALKING CHARACTERS =====
+  let walkerTimers = [];
+
+  function initWalkers() {
+    stopWalkers(); // clear previous
+    const walkers = document.querySelectorAll('.walker');
+    walkers.forEach((w, i) => {
+      // Populate emoji & label
+      const emoji = w.dataset.emoji || '🌟';
+      const name  = w.dataset.name  || '';
+      const dir   = w.dataset.dir   || 'right';
+      const speed = parseFloat(w.dataset.speed) || 18; // seconds for full crossing
+      const delay = parseFloat(w.dataset.delay) || 0;
+
+      w.querySelector('.walker-body').textContent = emoji;
+      w.querySelector('.walker-label').textContent = name;
+
+      // Flip if going left
+      if (dir === 'left') {
+        w.querySelector('.walker-body').style.transform = 'scaleX(-1)';
+      } else {
+        w.querySelector('.walker-body').style.transform = 'scaleX(1)';
+      }
+
+      // Stagger bob speed slightly per character
+      const bobSpeed = (0.4 + i * 0.08).toFixed(2) + 's';
+      w.querySelector('.walker-body').style.animationDuration = bobSpeed;
+      w.querySelector('.walker-shadow').style.animationDuration = bobSpeed;
+
+      // Start walking after delay
+      const t = setTimeout(() => startWalking(w, dir, speed), delay * 1000);
+      walkerTimers.push(t);
+    });
+  }
+
+  function startWalking(w, dir, speed) {
+    const screenW = window.innerWidth;
+    let pos = dir === 'right' ? -90 : screenW + 90;
+    const step = dir === 'right' ? (screenW + 180) / (speed * 60) : -(screenW + 180) / (speed * 60);
+
+    w.style.left = pos + 'px';
+
+    function tick() {
+      pos += step;
+      w.style.left = pos + 'px';
+
+      const done = dir === 'right' ? pos > screenW + 100 : pos < -100;
+      if (done) {
+        // Loop: reset to other side
+        pos = dir === 'right' ? -90 : screenW + 90;
+      }
+      const rafId = requestAnimationFrame(tick);
+      w._raf = rafId;
+    }
+    const rafId = requestAnimationFrame(tick);
+    w._raf = rafId;
+  }
+
+  function stopWalkers() {
+    walkerTimers.forEach(t => clearTimeout(t));
+    walkerTimers = [];
+    document.querySelectorAll('.walker').forEach(w => {
+      if (w._raf) cancelAnimationFrame(w._raf);
+    });
+  }
+
+  // ===== PHOTO FRAMES =====
+  function showFrames() {
+    ['frame-tl','frame-tr','frame-bl','frame-br'].forEach((id, i) => {
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('show');
+      }, 600 + i * 180);
+    });
+  }
+
+  function hideFrames() {
+    ['frame-tl','frame-tr','frame-bl','frame-br'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('show');
+    });
+  }
+
+  function loadPhoto(input, imgId, placeholderId) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = document.getElementById(imgId);
+      const ph  = document.getElementById(placeholderId);
+      img.src = e.target.result;
+      img.style.display = 'block';
+      ph.style.display  = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ===== MUTE TOGGLE =====
+  let muted = false;
+  function toggleMute() {
+    muted = !muted;
+    document.getElementById('mute-btn').textContent = muted ? '🔇' : '🔊';
+    if (audioCtx) {
+      audioCtx.destination.channelInterpretation = 'discrete';
+      // Suspend/resume context as mute mechanism
+      if (muted) audioCtx.suspend();
+      else audioCtx.resume();
+    }
+  }
+</script>
+</body>
+</html>
